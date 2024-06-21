@@ -1,0 +1,228 @@
+---
+pdf_document: default
+output:
+  word_document: default
+  pdf_document: default
+  html_document:
+    df_print: paged
+title: 'ASDS 6301: Final Project'
+author: "K Shanmukh 1002138937"
+html_document:
+  df_print: paged
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+```{r}
+#install.packages("lmtest")
+library(lmtest)
+```
+```{r}
+# Read Dataset for grades
+data <- read.csv("/Users/sooriya/Documents/study_performance.csv",header=TRUE,sep = ",")
+data
+```
+```{r}
+data <- data[,c('gender','test_preparation_course','math_score','reading_score','writing_score')]
+data
+```
+```{r}
+total_nulls <- sum(is.na(data))
+print(total_nulls)
+```
+```{r}
+# Pairwise correlation
+plot(data)
+```
+```{r}
+#Summary of each continuous variable
+summary(data[c('math_score', 'reading_score', 'writing_score')])
+```
+```{r}
+library(ggplot2)
+library(reshape2)
+data_long <- melt(data, measure.vars = c("math_score", "reading_score", "writing_score"))
+output <- ggplot(data_long, aes(x = variable, y = value)) +
+  geom_boxplot(outlier.shape = NA, fill = "lightblue", colour = "darkblue") + # Customize boxplot color and outline
+  geom_jitter(width = 0.2, size = 1.5, alpha = 0.5, color = "darkred") + # Add jitter with slight transparency
+  labs(title = "Boxplot with Jitter for Three Variables",
+       x = "Continuous Variables›",
+       y = "Values") +
+  theme_minimal() 
+print(output)
+```
+```{r}
+hist(data$writing_score, main = "Histogram of Writing Scores", xlab = "Writing Scores", ylab = "Frequency")
+```
+```{r}
+hist(data$reading_score, main = "Histogram of Reading Scores", xlab = "Reading Scores", ylab = "Frequency")
+```
+```{r}
+hist(data$math_score, main = "Histogram of Math Scores", xlab = "Math Scores", ylab = "Frequency")
+```
+```{r}
+library(dplyr)
+
+data %>%
+  ggplot(aes(x = data$math_score,y =data$reading_score,,color=factor(gender))) +
+  geom_point()+geom_smooth(method = 'lm')
+```
+```{r}
+library(dplyr)
+
+data %>%
+  ggplot(aes(x = data$math_score,y =data$reading_score,,color=factor(test_preparation_course))) +
+  geom_point()+geom_smooth(method = 'lm')
+```
+```{r}
+
+```
+
+```{r}
+# Get data for female who have not completed the test preparation course
+data1 <- data[data$gender == "female" & data$test_preparation_course == "none",]
+good_math <- sum(data1$math_score >= 70)
+not_good_math <- sum(data1$math_score < 70)
+cat("Total number of females who didn't complete test preparation course and good in math are ", good_math, "\n")
+cat("Total number of females who didn't complete test preparation course and not good in math are ", not_good_math,"\n")
+good_writing <- sum(data1$writing_score >= 70)
+not_good_writing <- sum(data1$writing_score < 70)
+cat("Total number of females who didn't complete test preparation course and good in writing are ", good_writing, "\n")
+cat("Total number of females who didn't complete test preparation course and not good in writing are ", not_good_writing,"\n")
+good_reading <- sum(data1$reading_score >= 70)
+not_good_reading <- sum(data1$reading_score < 70)
+cat("Total number of females who didn't complete test preparation course and good in reading are ", good_reading, "\n")
+cat("Total number of females who didn't complete test preparation course and not good in reading are ", not_good_reading)
+```
+```{r}
+# Get data for female who have completed the test preparation course
+data2 <- data[data$gender == "female" & data$test_preparation_course == "completed",]
+good_math <- sum(data2$math_score >= 70)
+not_good_math <- sum(data2$math_score < 70)
+cat("Total number of females who completed test preparation course and good in math are ", good_math, "\n")
+cat("Total number of females who completed test preparation course and not good in math are ", not_good_math, "\n")
+good_writing <- sum(data2$writing_score >= 70)
+not_good_writing <- sum(data2$writing_score < 70)
+cat("Total number of females who completed test preparation course and good in writing are ", good_writing, "\n")
+cat("Total number of females who completed test preparation course and not good in writing are ", not_good_writing,"\n")
+good_reading <- sum(data2$reading_score >= 70)
+not_good_reading <- sum(data2$reading_score < 70)
+cat("Total number of females who completed test preparation course and good in reading are ", good_reading, "\n")
+cat("Total number of females who completed test preparation course and not good in reading are ", not_good_reading)
+```
+```{r}
+# Get data for males who have completed the test preparation course
+data3 <- data[data$gender == "male" & data$test_preparation_course == "none",]
+good_math <- sum(data3$math_score >= 70)
+not_good_math <- sum(data3$math_score < 70)
+cat("Total number of males who didn't complete test preparation course and good in math are ", good_math, "\n")
+cat("Total number of males who didn't complete test preparation course and not good in math are ", not_good_math,"\n")
+good_writing <- sum(data3$writing_score >= 70)
+not_good_writing <- sum(data3$writing_score < 70)
+cat("Total number of males who didn't complete test preparation course and good in writing are ", good_writing, "\n")
+cat("Total number of males who didn't complete test preparation course and not good in writing are ", not_good_writing,"\n")
+good_reading <- sum(data3$reading_score >= 70)
+not_good_reading <- sum(data3$reading_score < 70)
+cat("Total number of males who didn't complete test preparation course and good in reading are ", good_reading, "\n")
+cat("Total number of males who didn't complete test preparation course and not good in reading are ", not_good_reading)
+```
+```{r}
+# Get data for male who have completed the test preparation course
+data4 <- data[data$gender == "male" & data$test_preparation_course == "completed",]
+good_math <- sum(data4$math_score >= 70)
+not_good_math <- sum(data4$math_score < 70)
+cat("Total number of males who completed test preparation course and good in math are ", good_math, "\n")
+cat("Total number of males who completed test preparation course and not good in math are ", not_good_math,"\n")
+good_writing <- sum(data4$writing_score >= 70)
+not_good_writing <- sum(data4$writing_score < 70)
+cat("Total number of males who completed test preparation course and good in writing are ", good_writing, "\n")
+cat("Total number of males who completed test preparation course and not good in writing are ", not_good_writing,"\n")
+good_reading <- sum(data4$reading_score >= 70)
+not_good_reading <- sum(data4$reading_score < 70)
+cat("Total number of males who completed test preparation course and good in reading are ", good_reading, "\n")
+cat("Total number of males who completed test preparation course and not good in reading are ", not_good_reading)
+```
+```{r}
+rm(list = ls())
+gender <- rep(c("female","male"),each = 2)
+test_preparation_course <- rep(c("none","completed"),1)
+good_math <- c(105,73,128,103)
+not_good_math <- c(229,111,180,71)
+good_writing <- c(175,150,76,88)
+not_good_writing <- c(159,34,232,86)
+good_reading <- c(177,141,102,93)
+not_good_reading <- c(157,43,206,81)
+data <- data.frame(gender = gender,test_preparation_course = test_preparation_course,good_math = good_math,not_good_math = not_good_math,good_reading = good_reading, not_good_reading = not_good_reading,good_writing = good_writing,not_good_writing = not_good_writing)
+rm(gender,test_preparation_course,good_math,not_good_math,good_reading,not_good_reading,good_writing,not_good_writing)
+data
+```
+```{r}
+#library(VGAM)
+model1 <- vglm(formula = cbind(good_math,not_good_math,good_reading,not_good_reading,good_writing,not_good_writing) ~ gender*test_preparation_course, family = cumulative(parallel = TRUE), data = data)
+summary(model1)
+```
+```{r}
+# Show Pearson residuals for the model
+residuals <- residuals(model1, type = "pearson")
+residuals
+```
+```{r}
+# Perform GOF test
+chisq <- sum(residuals^2)
+chisq
+```
+```{r}
+# Find p-value
+pchisq(deviance(model1), df.residual(model1), lower.tail = FALSE)
+```
+```{r}
+print("Here p-value is less than 0.05. So, we can say that the model is not a good fit.")
+```
+```{r}
+# Odds ratio for measuring the course effect for males and females respectively
+cat("For Males and Course Incomplete:\n")
+cat("We know that logit(π^) = -0.826878 +0.592893 +0.144328(gender male)+0.035029(course none) +0.022399(gender male x course none)\n")
+cat("logit(π^) = -0.233985 +0.144328 +0.035029 + 0.022399\n")
+cat("logit(π^) = -0.032229\n")
+```
+```{r}
+cat("For Males and Course complete:\n")
+cat("We know that logit(π^) = -0.826878 +0.592893 +0.144328(gender male)+0.035029(course none) +0.022399(gender male x course none)\n")
+cat("logit(π^) = -0.233985 +0.144328\n")
+cat("logit(π^) = -0.089657\n")
+```
+```{r}
+cat("Odds Ratio for Course incomplete vs. Course complete for males is e^(0.057428) = 1.0591. So, males are 1.0591 times as likely to not complete test preparation course compared to completion of test preparation course.")
+```
+```{r}
+cat("For Females and Course incomplete:\n")
+cat("We know that logit(π^) = -0.826878 +0.592893 +0.144328(gender male)+0.035029(course none) +0.022399(gender male x course none)\n")
+cat("logit(π^) = -0.233985 +0.035029\n")
+cat("logit(π^) = -0.198956\n")
+```
+```{r}
+cat("For Females and Course complete:\n")
+cat("We know that logit(π^) = -0.826878 +0.592893 +0.144328(gender male)+0.035029(course none) +0.022399(gender male x course none)\n")
+cat("logit(π^) = -0.233985\n")
+```
+```{r}
+cat("Odds Ratio for Course incomplete vs. Course complete for females is e^(0.035029) = 1.0356. So, females are 1.0356 times as likely to not complete test preparation course compared to completion of test preparation course.")
+```
+```{r}
+
+```
+```{r}
+nested <- glm(finalgrade~absences,data=data)
+complex <- glm(finalgrade~absences+age,data=data)
+lrtest(nested, complex)
+```
+```{r}
+nested <- glm(finalgrade~studytime,data=data)
+complex <- glm(finalgrade~studytime+per1grade+per2grade,data=data)
+lrtest(nested,complex)
+```
+```{r}
+nested <- glm(finalgrade~studytime+per1grade,data=data)
+complex <- glm(finalgrade~studytime+per1grade+per2grade,data=data)
+lrtest(nested,complex)
+```
