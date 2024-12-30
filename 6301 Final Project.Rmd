@@ -6,7 +6,6 @@ output:
   html_document:
     df_print: paged
 title: 'ASDS 6301: Final Project'
-author: "K Shanmukh 1002138937"
 html_document:
   df_print: paged
 ---
